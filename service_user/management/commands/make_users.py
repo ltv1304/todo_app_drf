@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from service_user.models import ServiseUser
+from service_user.models import ServiceUser
 from django.core.management import call_command
 from django.contrib.auth.models import User
 
@@ -16,7 +16,7 @@ class Command(BaseCommand):
         call_command('migrate')
 
         for i in range(options.setdefault('users_num', 1)):
-            ServiseUser.objects.create(
+            ServiceUser.objects.create(
                                         username = f'test_{i}',
                                         firstname = f'test_first_name_{i}',
                                         lastname = f'test_last_name_{i}',

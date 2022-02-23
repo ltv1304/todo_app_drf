@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import ServiseUser 
+from .models import ServiceUser 
 from .serializers import UserModelSerializer 
 
 
 class UserModelViewSet(ModelViewSet):
-   queryset = ServiseUser.objects.all()
+   queryset = ServiceUser.objects.all()
    serializer_class = UserModelSerializer
