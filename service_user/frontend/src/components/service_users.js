@@ -1,17 +1,23 @@
-import React from 'react'
-
+import React from 'react';
+import './service_users.css';
 
 const ServiceUserItem = ({user}) => {
+    
+    const {username, firstname, lastname, email} = user;
+    
     return(
-        <tr key={user.email}>
+        <tr key={username}>
             <td>
-                {user.firstname}
+                {username}
             </td>
             <td>
-                {user.lastname}
+                {firstname}
             </td>
             <td>
-                {user.email}
+                {lastname}
+            </td>
+            <td>
+                {email}
             </td>
         </tr>
     )
@@ -19,9 +25,10 @@ const ServiceUserItem = ({user}) => {
 
 const ServiceUsersList = ({users}) => {
     return (
-        <table>
+        <table className="table">
             <thead>
                 <tr>
+                    <th>Псевдоним</th>
                     <th>Имя</th>
                     <th>Фамилия</th>
                     <th>email</th>
