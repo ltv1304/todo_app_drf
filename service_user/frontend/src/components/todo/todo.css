@@ -1,0 +1,26 @@
+.table {
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table {
+  margin: 40px auto;
+}
+.table th {
+  border: 2px solid #777777;
+  background: #226d69;
+  color: white;
+  padding: 5px 20px;
+  position: relative;
+  font-size: 20px;
+  text-align: center;
+  font-weight: normal;
+}
+
+
+.table td {
+  border: 2px solid darkgray;
+  padding: 5px 5px;
+  position: relative;
+  text-align: center;
+}
