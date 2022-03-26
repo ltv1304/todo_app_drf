@@ -3,7 +3,8 @@ from .models import ServiceUser
 
 
 class ServiceUserAdmin(admin.ModelAdmin):
-    list_display = ('user_name', 'email')
+    model = ServiceUser
+    list_display = ('username', 'email')
 
 
 admin.site.register(ServiceUser, ServiceUserAdmin)

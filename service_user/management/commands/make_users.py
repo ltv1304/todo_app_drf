@@ -16,15 +16,28 @@ class Command(BaseCommand):
         call_command('migrate')
 
         for i in range(options.setdefault('users_num', 1)):
-            ServiceUser.objects.create(
+            user = ServiceUser.objects.create(
                                         username = f'test_{i}',
-                                        firstname = f'test_first_name_{i}',
-                                        lastname = f'test_last_name_{i}',
+                                        first_name = f'test_first_name_{i}',
+                                        last_name = f'test_last_name_{i}',
                                         email = f'test_{i}@mail.ru',
+                                        password = f'test_{i}'
                                         )
+            p = user.password
+            user.set_password(p)
+            user.save()
         
         if options['users_num']:
-            User.objects.create_superuser('root', 'root@root.com', 'root')
+            user = ServiceUser.objects.create(
+                    username=f'root1',
+                    email=f'root1@root.ru',
+                    password=f'root1',
+                    is_superuser=True,
+                    is_staff=True,
+                    )
+            p = user.password
+            user.set_password(p)
+            user.save()
 
     def add_arguments(self, parser):
         parser.add_argument(
