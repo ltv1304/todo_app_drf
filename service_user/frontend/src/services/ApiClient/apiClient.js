@@ -2,27 +2,37 @@ import axios from 'axios'
 
 class ApiClient {
 
-    baseAddr = 'http://localhost:8000/api';
+    baseAddr = 'http://localhost:8000/';
 
-    async getData(url) {
-        const data = await axios(`${this.baseAddr}${url}`);
+    async getData(url, headers) {
+        const data = await axios.get(`${this.baseAddr}${url}`, {headers});
         return await data;
     }
 
-    getAllServiceUsers() {
-        return this.getData('/users/service_user/')
+    async tokenRequest(auth_data) {
+        const data = await axios.post(`${this.baseAddr}api-token-auth/`, auth_data);
+        return await data;
     }
 
-    getAllToDos() {
-        return this.getData('/todos/todo/')
+    getAllServiceUsers(headers) {
+        return this.getData('api/users/service_user/', headers)
     }
 
-    getAllProjects() {
-        return this.getData('/projects/project/')
+    getAllToDos(headers) {
+        return this.getData('api/todos/todo/', headers)
     }
 
-    getProjectDetail(uid) {
-        return this.getData(`/projects/project/${uid}/`)
+    getAllProjects(headers) {
+        return this.getData('api/projects/project/', headers)
+    }
+
+    getProjectDetail(uid, headers) {
+        return this.getData(`api/projects/project/${uid}/`, headers)
+    }
+
+    getToken(username, password) {
+        let auth_data = {username: username, password: password}
+        return this.tokenRequest(auth_data)
     }
 
 }

@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './todo.css';
-import ApiClient from "../../services/ApiClient";
 
 const ToDoItem = ({todo}) => {
     const {url, content, project, user, activeFlag} = todo;
@@ -23,26 +22,7 @@ const ToDoItem = ({todo}) => {
     )
 }
 
-export default class ToDosList extends Component {
-    apiClient = new ApiClient()
-
-    state = {
-        todos: []
-    }
-
-    componentDidMount() {
-        this.apiClient.getAllToDos()
-            .then(response => {
-                const todos = response.data.results
-                this.setState(
-                    {
-                        'todos': todos
-                    }
-                )
-            })
-    }
-
-    render() {
+const ToDosList = ({todos}) => {
         return (
             <table className="table">
                 <thead>
@@ -54,9 +34,10 @@ export default class ToDosList extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.todos.map((todo) => <ToDoItem todo={todo}/>)}
+                {todos.map((todo) => <ToDoItem todo={todo}/>)}
                 </tbody>
             </table>
         )
-    }
 }
+
+export default ToDosList

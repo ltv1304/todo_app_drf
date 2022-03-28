@@ -4,11 +4,10 @@
 }
 
 .table {
-  margin: 40px auto;
+  margin: 0 auto;
 }
 .table th {
-  border: 2px solid #777777;
-  background: #226d69;
+  background: darkred;
   color: white;
   padding: 5px 20px;
   position: relative;
