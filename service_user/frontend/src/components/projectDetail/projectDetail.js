@@ -17,13 +17,13 @@ const UserTableItem = ({user}) => {
 }
 let apiClient = new ApiClient()
 
-const ProjectDetail = () => {
+const ProjectDetail = ({get_headers}) => {
     let {uid}  = useParams();
-
+    const headers = get_headers()
     const [users, getProjectUsers] = React.useState('');
 
     useEffect(() => {
-        apiClient.getProjectDetail(uid)
+        apiClient.getProjectDetail(uid, headers)
             .then(response => {
                 const users = response.data
                 getProjectUsers(users)

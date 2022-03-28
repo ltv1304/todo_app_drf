@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './project.css';
-import ApiClient from "../../services/ApiClient";
 import {Link} from 'react-router-dom'
 
 const ProjectItem = ({project}) => {
@@ -22,26 +21,8 @@ const ProjectItem = ({project}) => {
     )
 }
 
-export default class ProjectsList extends Component {
-    apiClient = new ApiClient()
-
-    state = {
-        projects: []
-    }
-
-    componentDidMount() {
-        this.apiClient.getAllProjects()
-            .then(response => {
-                const projects = response.data.results
-                this.setState(
-                    {
-                        'projects': projects
-                    }
-                )
-            })
-    }
-
-    render() {
+const ProjectsList = ({projects}) => {
+        console.log(projects)
         return (
             <table className="table">
                 <thead>
@@ -52,9 +33,10 @@ export default class ProjectsList extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.projects.map((project) => <ProjectItem project={project}/>)}
+                {projects.map((project) => <ProjectItem project={project}/>)}
                 </tbody>
             </table>
         )
-    }
 }
+
+export default ProjectsList

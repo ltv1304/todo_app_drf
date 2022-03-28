@@ -1,15 +1,14 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './service_users.css';
-import ApiClient from '../../services/ApiClient'
 
 const ServiceUserItem = ({user}) => {
 
-    const {uid, userName, firstName, lastName, email} = user;
+    const {uid, username, firstName, lastName, email} = user;
     
     return(
         <tr key={uid}>
             <td>
-                {userName}
+                {username}
             </td>
             <td>
                 {firstName}
@@ -24,29 +23,7 @@ const ServiceUserItem = ({user}) => {
     )
 }
 
-export default class ServiceUsersList extends Component {
-
-    apiClient = new ApiClient()
-
-    state = {
-        users: []
-    }
-
-    componentDidMount() {
-        this.apiClient.getAllServiceUsers()
-            .then(response => {
-                const users = response.data.results
-                console.log(users)
-                this.setState(
-                    {
-                        'users': users
-                    }
-                )
-            })
-    }
-
-
-    render() {
+const ServiceUsersList = ({users}) => {
     return (
         <table className="table">
             <thead>
@@ -58,9 +35,10 @@ export default class ServiceUsersList extends Component {
                 </tr>
             </thead>
             <tbody>
-                {this.state.users.map((user) => <ServiceUserItem user={user} />)}
+                {users.map((user) => <ServiceUserItem user={user} />)}
             </tbody>
         </table>
     )
-    }
 }
+
+export default ServiceUsersList
