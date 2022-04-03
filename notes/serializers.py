@@ -5,6 +5,12 @@ from notes.models import Project, TODO
 from service_user.models import ServiceUser
 
 
+class ProjectSerializerBase(ModelSerializer):
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+
 class ProjectSerializer(ModelSerializer):
     # users = HyperlinkedRelatedField(view_name='serviceuser-detail',
     #                                 queryset=ServiceUser.objects.all(),
@@ -14,6 +20,12 @@ class ProjectSerializer(ModelSerializer):
 
     class Meta:
         model = Project
+        fields = '__all__'
+
+
+class TODOSerializerBase(ModelSerializer):
+    class Meta:
+        model = TODO
         fields = '__all__'
 
 

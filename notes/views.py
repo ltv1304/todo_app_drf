@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from notes.filters import TODOFilter, ProjectFilter
 from notes.models import Project, TODO
-from notes.serializers import ProjectSerializer, TODOSerializer
+from notes.serializers import ProjectSerializer, TODOSerializer, TODOSerializerBase, ProjectSerializerBase
 
 
 class ProjectLimitOffsetPagination(LimitOffsetPagination):
@@ -18,9 +18,15 @@ class ProjectViewSet(ModelViewSet):
     filterset_class = ProjectFilter
     pagination_class = ProjectLimitOffsetPagination
 
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ProjectSerializer
+        return ProjectSerializerBase
+
 
 class TODOLimitOffsetPagination(LimitOffsetPagination):
     default_limit = 20
+
 
 class TODOViewSet(ModelViewSet):
     queryset = TODO.objects.all()
@@ -34,3 +40,8 @@ class TODOViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return TODOSerializer
+        return TODOSerializerBase
