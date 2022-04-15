@@ -1,60 +1,31 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './projectDetail.css';
 import {useParams} from "react-router-dom";
-import axios from 'axios'
-import ApiClient from "../../services/ApiClient";
 
 
-const UserTableItem = ({user}) => {
 
-    return(
-        <tr>
-            <td>
-                {user}
-            </td>
-        </tr>
-    )
-}
-let apiClient = new ApiClient()
-
-const ProjectDetail = ({get_headers}) => {
+const ProjectDetail = ({users, todos, projects}) => {
     let {uid}  = useParams();
-    const headers = get_headers()
-    const [users, getProjectUsers] = React.useState('');
+    let thisProject =  projects.find(el => el.uid == uid)
+    let thisUsers = users.filter(el => thisProject.users.includes(el.uid))
+    let thisTodos = todos.filter(el => el.project == uid)
 
-    useEffect(() => {
-        apiClient.getProjectDetail(uid, headers)
-            .then(response => {
-                const users = response.data
-                getProjectUsers(users)
-            })
-    }, []);
-
-    if (users==='') return null;
-
+    console.log(thisTodos)
     return (
-        <table className="table">
-            <thead>
-            <tr>
-                <th>Название</th>
-                <th>Адрес</th>
-                <th>Пользователи</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{users.title}</td>
-                <td>{users.path}</td>
-                <td>
-                    <table>
-                        <tbody>
-                        {users.users.map(user => <UserTableItem user={user} /> )}
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <>
+            <h1 className="text-center">Название проекта: {thisProject.title}</h1>
+            <p>Над проектом трудятся:</p>
+            <ul>
+                {thisUsers.map((item)=><li>{item.username}</li>)}
+            </ul>
+            <hr></hr>
+            <h3 className="text-center">Заметки проекта</h3>
+            <ul>
+                {thisTodos.map((item)=> item.activeFlag ? <li>{item.content} by {users.find(el => el.uid == item.user).username}</li> :
+                                                           <li><s>{item.content}</s> by {users.find(el => el.uid == item.user).username}</li> )}
+            </ul>
+        </>
+
     )
 }
 
