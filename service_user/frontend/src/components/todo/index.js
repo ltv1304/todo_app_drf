@@ -1,3 +1,2 @@
-import ToDosList from "./todo";
-
-export default ToDosList
+export { default as ToDosList } from "./todo";
+export { default as TodoForm } from './todoForm';

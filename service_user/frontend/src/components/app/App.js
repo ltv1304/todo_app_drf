@@ -1,13 +1,15 @@
 import React from 'react'
 import ServiceUsersList from '../servise_users'
-import ToDosList from "../todo";
-import ProjectsList from "../project";
+import {ToDosList, TodoForm} from "../todo";
+import {ProjectsList, ProjectForm} from "../project";
 import ProjectDetail from "../projectDetail";
 import LoginForm from "../auth";
 import './App.css'
 import {Link, Route, Switch} from "react-router-dom";
 import ApiClient from "../../services/ApiClient";
 import Cookies from "universal-cookie/lib";
+import ProjectUpdateForm from "../project/projectUpdateForm";
+
 
 
 const NotFound404 = ({location}) => {
@@ -38,7 +40,7 @@ class App extends React.Component {
     }
 
     is_authenticated() {
-        return this.state.token != ''
+        return this.state.token !== ''
     }
 
     logout() {
@@ -95,6 +97,57 @@ class App extends React.Component {
                 this.setState({todos: []})
                 console.log(error)
         })
+    }
+
+    deleteProject(uid) {
+        const headers = this.get_headers()
+        this.apiClient.deleteProject(uid, headers)
+            .then(response => {
+                this.setState({'projects': this.state.projects.filter((item) => item.uid !== uid)})
+            }).catch(error => console.log(error))
+    }
+
+    createProject(title, path, users){
+        const headers = this.get_headers()
+        const new_data = {title: title, path: path, users:users}
+        this.apiClient.createProject(new_data, headers)
+            .then(response => {
+                console.log(response.data)
+                let new_peoject = response.data
+                this.setState({projects:[...this.state.projects, new_peoject]})
+            }).catch(error => {console.log(error.response.data)})
+    }
+
+    updateProject(uid, title, path, users){
+        const headers = this.get_headers()
+        const new_data = {uid: uid, title: title, path: path, users:users}
+        this.apiClient.updateProject(new_data, headers)
+            .then(response => {
+                let updted_project = response.data
+                let newProjectsList = this.state.projects.filter((item) => item.uid !== uid)
+                this.setState({'projects': [...newProjectsList, updted_project]})
+            }).catch(error => {console.log(error.response.data)})
+    }
+
+    createTodo(content, project){
+        const headers = this.get_headers()
+        const new_data = {content: content, project: project}
+        this.apiClient.createTodo(new_data, headers)
+            .then(response => {
+                let new_todo = response.data
+                this.setState({todos:[...this.state.todos, new_todo]})
+            }).catch(error => {console.log(error.response.data)})
+    }
+
+
+    deleteTodo(uid) {
+        const headers = this.get_headers()
+        this.apiClient.deleteTodo(uid, headers)
+            .then(response => {
+                let deleted_todo = response.data
+                let newTodoList = this.state.todos.filter((item) => item.uid !== uid)
+                this.setState({'todos': [...newTodoList, deleted_todo]})
+            }).catch(error => console.log(error))
     }
 
     componentDidMount() {
@@ -158,10 +211,23 @@ class App extends React.Component {
                     <Switch>
                         <Route exact path='/' component={() => <ServiceUsersList users={this.state.users}/>}/>
                         <Route exact path='/users' component={() =><ServiceUsersList users={this.state.users}/>}/>
-                        <Route exact path='/todos' component={() =><ToDosList todos={this.state.todos}/>}/>
-                        <Route exact path='/projects' component={() =><ProjectsList projects={this.state.projects}/>}/>
+                        <Route exact path='/todos' component={() =><ToDosList todos={this.state.todos}
+                                                                              users={this.state.users}
+                                                                              projects={this.state.projects}
+                                                                              deleteTodo={(uid)=>this.deleteTodo(uid)}/>}/>
+                        <Route exact path='/projects' component={() =><ProjectsList projects={this.state.projects}
+                                                                                    users={this.state.users}
+                                                                                    deleteProject={(uid)=>this.deleteProject(uid)}
+                                                                                    updateProject={(uid, title, path, users)=>this.updateProject(uid, title, path, users)}/>}/>
+                        <Route exact path='/projects/create' component={() =><ProjectForm
+                                    users={this.state.users}
+                                    createProject={(title, path, users) => this.createProject(title, path, users)}/>}/>
+                        <Route exact path='/todos/create' component={() =><TodoForm
+                                    projects={this.state.projects}
+                                    createTodo={(content, project) => this.createTodo(content, project)}/>}/>
+                        <Route exact path='/projects/update' component={ProjectUpdateForm}/>
                         <Route path="/project/:uid">
-                            <ProjectDetail get_headers={() => this.get_headers()}/>
+                            <ProjectDetail users={this.state.users} todos={this.state.todos} projects={this.state.projects}/>
                         </Route>
                         <Route component={NotFound404} />
                     </Switch>

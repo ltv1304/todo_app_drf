@@ -36,12 +36,25 @@ class TODOViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data={'active_flag': False}, partial=True)
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save(active_flag=False)
 
     def get_serializer_class(self):
-        if self.request.method in ['GET']:
+        if self.request.method in ['GET', 'DELETE']:
             return TODOSerializer
         return TODOSerializerBase
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user, active_flag=True)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = self.perform_create(serializer)
+        instance_serializer = TODOSerializer(instance)
+        return Response(instance_serializer.data)
