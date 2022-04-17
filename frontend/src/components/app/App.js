@@ -40,7 +40,8 @@ class App extends React.Component {
     }
 
     is_authenticated() {
-        return this.state.token !== ''
+        // return this.state.token != ''
+        return !!this.state.username
     }
 
     logout() {
@@ -200,8 +201,8 @@ class App extends React.Component {
                     <div className="container">
                         <div className="row">
                             <div className="wrap-headline">
-                                <h1 className="text-center">Company name</h1>
-                                <h2 className="text-center">Tagline message</h2>
+                                <h1 className="text-center">Todo app</h1>
+                                <h2 className="text-center">remember you thinks</h2>
                                 <hr></hr>
                             </div>
                         </div>

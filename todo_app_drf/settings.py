@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 import django
 from django.utils.encoding import force_str
@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure--bxisj*)_ezev01x(g*m7z$2@aucr4vsy2a=5g%-0g9^np+vfv
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000', 'http://80.78.240.146:8000']
+ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'service_user.ServiceUser'
 # Application definition
 
@@ -85,13 +85,23 @@ WSGI_APPLICATION = 'todo_app_drf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+#DATABASES = {
+#   'default': {
+#       'ENGINE': 'django.db.backends.sqlite3',
+#       'NAME': BASE_DIR / 'db.sqlite3',
+#   }
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'todoDB',
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -160,7 +170,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
 
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissions'
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
