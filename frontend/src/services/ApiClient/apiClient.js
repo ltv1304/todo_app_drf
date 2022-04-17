@@ -2,7 +2,7 @@ import axios from 'axios'
 
 class ApiClient {
 
-    baseAddr = 'http://localhost:8000/';
+    baseAddr = 'http://80.78.240.146:8000/';
 
     async getData(url, headers) {
         const data = await axios.get(`${this.baseAddr}${url}`, {headers});

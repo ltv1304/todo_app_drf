@@ -1,0 +1,51 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.1
+    privileged: true
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: 4jE5GnOO
+      POSTGRES_PASSWORD: PW7T8mJ6
+      POSTGRES_DB: todoDB
+
+  adminer:
+    image: adminer:4.7.8-standalone
+    restart: always
+    ports:
+      - 8082:8080
+    depends_on:
+    - db
+  
+  backend:
+    build:
+      context: .
+    expose:
+      - 8080
+    environment:
+      POSTGRES_USER: 4jE5GnOO
+      POSTGRES_PASSWORD: PW7T8mJ6
+      POSTGRES_DB: todoDB
+    command: bash -c
+      "./wait-for-postgres.sh db
+      && python manage.py migrate
+      && python manage.py make_users -n 10 -s
+      && gunicorn todo_app_drf.wsgi -b 0.0.0.0:8080"
+    depends_on:
+      - db
+  
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+    depends_on:
+      - backend
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - 80:80
+    depends_on:
+      - nginx
