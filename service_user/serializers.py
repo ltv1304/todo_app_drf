@@ -19,6 +19,14 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = ServiceUser
-        fields = ('uid', 'username', 'email', 'first_name', 'last_name', 'groups',)
+        fields = ('uid', 'username', 'email', 'first_name', 'last_name', 'groups')
+
+
+class UserSerializerServiceInfo(ModelSerializer):
+    groups = GroupSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ServiceUser
+        fields = ('uid', 'username', 'email', 'first_name', 'last_name', 'groups', 'is_superuser', 'is_staff')
 
 
